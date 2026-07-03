@@ -1,8 +1,6 @@
-export type TabId = "welcome" | "scenarios" | "progress";
+export type TabId = "home" | "progress" | "profile";
 
-export type FlowScreen = "conversation" | "feedback";
-
-export type AppScreen = TabId | FlowScreen;
+export type FlowScreen = "session" | "session-complete";
 
 export interface TabItem {
   id: TabId;
@@ -10,13 +8,13 @@ export interface TabItem {
 }
 
 export const TABS: TabItem[] = [
-  { id: "welcome", label: "Home" },
-  { id: "scenarios", label: "Practice" },
+  { id: "home", label: "Home" },
   { id: "progress", label: "Progress" },
+  { id: "profile", label: "Profile" },
 ];
 
 export const TAB_LABELS: Record<TabId, string> = {
-  welcome: "Home",
-  scenarios: "Practice",
+  home: "Home",
   progress: "Progress",
+  profile: "Profile",
 };

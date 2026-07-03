@@ -1,3 +1,5 @@
+"use client";
+
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -9,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants = {
   primary:
-    "bg-primary-800 text-white shadow-float active:bg-primary-900 hover:bg-primary-900",
+    "bg-[#007AFF] text-white shadow-elevated active:bg-[#0066DD] hover:bg-[#0066DD]",
   secondary:
     "bg-primary-50 text-primary-800 active:bg-primary-100 hover:bg-primary-100",
   ghost: "bg-transparent text-primary-700 active:bg-primary-50",

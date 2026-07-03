@@ -1,34 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { PhoneShell } from "@/components/layout/PhoneShell";
 import { ScreenWrapper } from "@/components/layout/ScreenWrapper";
-import { ConversationScreen } from "@/components/screens/ConversationScreen";
-import { FeedbackScreen } from "@/components/screens/FeedbackScreen";
+import { CoachSessionScreen } from "@/components/screens/CoachSessionScreen";
+import { HomeScreen } from "@/components/screens/HomeScreen";
+import { ProfileScreen } from "@/components/screens/ProfileScreen";
 import { ProgressScreen } from "@/components/screens/ProgressScreen";
-import { ScenarioScreen } from "@/components/screens/ScenarioScreen";
-import { WelcomeScreen } from "@/components/screens/WelcomeScreen";
+import { SessionCompleteScreen } from "@/components/screens/SessionCompleteScreen";
 import { PWARegister } from "@/components/PWARegister";
-import { getMockFeedback } from "@/lib/mockAi";
-import type { TabId, FlowScreen } from "@/lib/navigation";
-import { LANGUAGE_LABELS, SCENARIOS } from "@/lib/scenarios";
-import type { FeedbackResult, Language, ScenarioId } from "@/lib/types";
+import { getCurrentMilestone } from "@/lib/coach-session";
+import { getNextPlayableMilestoneId } from "@/lib/milestones";
+import type { FlowScreen, TabId } from "@/lib/navigation";
+import {
+  advanceMoment,
+  advanceToNextMilestone,
+  beginAnnaSession,
+  getAnnaMemoryFromProgress,
+  getLivingWorldFromProgress,
+  getTransitionProfile,
+  INITIAL_PROGRESS,
+  markMilestoneComplete,
+  resetMilestoneProgress,
+  syncMilestoneForLanguage,
+} from "@/lib/progress";
+import { loadProgress, saveProgress } from "@/lib/persistence";
+import type { JourneyProgress, Language } from "@/lib/types";
 
 type TransitionDirection = "forward" | "back" | "fade";
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabId>("welcome");
+export default function App() {
+  const [activeTab, setActiveTab] = useState<TabId>("home");
   const [flowScreen, setFlowScreen] = useState<FlowScreen | null>(null);
   const [transitionDir, setTransitionDir] = useState<TransitionDirection>("fade");
 
-  const [language, setLanguage] = useState<Language | null>(null);
-  const [scenario, setScenario] = useState<ScenarioId | null>(null);
-  const [userText, setUserText] = useState("");
-  const [feedback, setFeedback] = useState<FeedbackResult | null>(null);
+  const [language, setLanguage] = useState<Language>("german");
+  const [momentIndex, setMomentIndex] = useState(0);
+  const [progress, setProgress] = useState<JourneyProgress>(INITIAL_PROGRESS);
+  const hydrated = useRef(false);
+
+  useEffect(() => {
+    setProgress(loadProgress());
+    hydrated.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated.current) return;
+    saveProgress(progress);
+  }, [progress]);
+  const [completedMilestoneId, setCompletedMilestoneId] = useState<string | null>(
+    null
+  );
+  const [sessionResuming, setSessionResuming] = useState(false);
 
   const isInFlow = flowScreen !== null;
-  const showBottomNav = !isInFlow;
+  const annaMemory = getAnnaMemoryFromProgress(progress, language);
+  const livingWorld = getLivingWorldFromProgress(progress, language);
+  const milestone = getCurrentMilestone(
+    language,
+    progress.currentMilestoneId,
+    progress.conversationSeed,
+    annaMemory,
+    livingWorld
+  );
+  const totalMoments = milestone.moments.length;
+  const isLastMoment = momentIndex >= totalMoments - 1;
 
   const navigateTab = (tab: TabId) => {
     setTransitionDir("fade");
@@ -36,123 +73,149 @@ export default function Home() {
     setActiveTab(tab);
   };
 
-  const handleGetStarted = () => {
-    if (!language) return;
+  const handleEnterScene = () => {
+    const resuming = progress.momentsCompleted > 0 && !progress.milestoneDone;
+    setSessionResuming(resuming);
+
+    if (progress.milestoneDone) {
+      setMomentIndex(0);
+      setProgress((p) => resetMilestoneProgress(p));
+    } else {
+      setMomentIndex(progress.momentsCompleted);
+    }
+
+    if (!resuming) {
+      setProgress((p) => beginAnnaSession(p, language, progress.currentMilestoneId));
+    }
+
     setTransitionDir("forward");
-    setActiveTab("scenarios");
+    setFlowScreen("session");
   };
 
-  const handleSelectScenario = (id: ScenarioId) => {
-    setScenario(id);
-    setTransitionDir("forward");
-    setFlowScreen("conversation");
-    setUserText("");
-    setFeedback(null);
+  const handleLanguageChange = (lang: Language) => {
+    const first = getCurrentMilestone(lang, INITIAL_PROGRESS.currentMilestoneId);
+    setLanguage(lang);
+    setMomentIndex(0);
+    setProgress((p) =>
+      syncMilestoneForLanguage(
+        p,
+        lang,
+        INITIAL_PROGRESS.currentMilestoneId,
+        first.title,
+        first.moments.length
+      )
+    );
   };
 
-  const handleSubmitConversation = (text: string) => {
-    if (!language || !scenario) return;
-    setUserText(text);
-    setFeedback(getMockFeedback(language, scenario, text));
-    setTransitionDir("forward");
-    setFlowScreen("feedback");
+  const handleMomentComplete = (meta: {
+    neededDemonstration: boolean;
+    responseLatencyMs: number;
+    keyPhrase: string;
+    annaIntervened?: boolean;
+    npcIntent?: string | null;
+  }) => {
+    const momentId = milestone.moments[momentIndex].id;
+    setProgress((p) =>
+      advanceMoment(p, language, progress.currentMilestoneId, momentId, meta)
+    );
+
+    if (isLastMoment) {
+      setCompletedMilestoneId(progress.currentMilestoneId);
+      setProgress((p) =>
+        markMilestoneComplete(p, language, `finished:${progress.currentMilestoneId}`)
+      );
+      setTransitionDir("forward");
+      setFlowScreen("session-complete");
+    } else {
+      setMomentIndex((i) => i + 1);
+    }
   };
 
-  const handleBackFromConversation = () => {
+  const handleExitSession = () => {
     setTransitionDir("back");
     setFlowScreen(null);
-    setActiveTab("scenarios");
+    setActiveTab("home");
   };
 
-  const handleBackFromFeedback = () => {
+  const handleSessionDone = () => {
+    const finishedId = completedMilestoneId ?? progress.currentMilestoneId;
+    const nextId = getNextPlayableMilestoneId(language, finishedId);
+
+    if (nextId) {
+      const nextMilestone = getCurrentMilestone(language, nextId);
+      setProgress((p) =>
+        advanceToNextMilestone(
+          p,
+          nextId,
+          nextMilestone.title,
+          nextMilestone.moments.length
+        )
+      );
+    }
+
+    setCompletedMilestoneId(null);
+    setMomentIndex(0);
     setTransitionDir("back");
-    setFlowScreen("conversation");
-  };
-
-  const handlePracticeAgain = () => {
-    setTransitionDir("forward");
-    setUserText("");
-    setFeedback(null);
-    setFlowScreen("conversation");
-  };
-
-  const handleViewProgress = () => {
-    setTransitionDir("forward");
     setFlowScreen(null);
-    setActiveTab("progress");
+    setActiveTab("home");
   };
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "welcome":
+      case "home":
         return (
-          <WelcomeScreen
-            selectedLanguage={language}
-            onSelectLanguage={setLanguage}
-            onGetStarted={handleGetStarted}
-          />
-        );
-      case "scenarios":
-        if (!language) {
-          return (
-            <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-              <p className="text-sm text-slate-500">
-                Please select a language on the Home screen first.
-              </p>
-              <button
-                type="button"
-                onClick={() => navigateTab("welcome")}
-                className="mt-4 text-sm font-semibold text-primary-700"
-              >
-                Go to Home
-              </button>
-            </div>
-          );
-        }
-        return (
-          <ScenarioScreen
+          <HomeScreen
             language={language}
-            selectedScenario={scenario}
-            onSelectScenario={handleSelectScenario}
+            progress={progress}
+            onEnterScene={handleEnterScene}
+            onLanguageChange={handleLanguageChange}
           />
         );
       case "progress":
-        return <ProgressScreen />;
+        return <ProgressScreen language={language} progress={progress} />;
+      case "profile":
+        return (
+          <ProfileScreen
+            language={language}
+            onLanguageChange={handleLanguageChange}
+          />
+        );
     }
   };
 
   const renderFlowContent = () => {
-    if (!language || !scenario || !flowScreen) return null;
+    if (!flowScreen) return null;
 
-    const scenarioInfo = SCENARIOS.find((s) => s.id === scenario)!;
-    const langInfo = LANGUAGE_LABELS[language];
-
-    if (flowScreen === "conversation") {
-      return (
-        <ConversationScreen
-          language={language}
-          scenarioId={scenario}
-          onBack={handleBackFromConversation}
-          onSubmit={handleSubmitConversation}
-        />
-      );
+    switch (flowScreen) {
+      case "session":
+        return (
+          <CoachSessionScreen
+            language={language}
+            milestoneId={progress.currentMilestoneId}
+            beatIndex={momentIndex}
+            transitionProfile={getTransitionProfile(progress, language)}
+            annaMemory={annaMemory}
+            livingWorld={livingWorld}
+            conversationSeed={progress.conversationSeed}
+            isResuming={sessionResuming && momentIndex === progress.momentsCompleted}
+            isLastBeat={isLastMoment}
+            onBeatComplete={handleMomentComplete}
+            onExit={handleExitSession}
+          />
+        );
+      case "session-complete":
+        return (
+          <SessionCompleteScreen
+            language={language}
+            milestoneId={completedMilestoneId ?? progress.currentMilestoneId}
+            transitionProfile={getTransitionProfile(progress, language)}
+            annaMemory={annaMemory}
+            livingWorld={livingWorld}
+            conversationSeed={progress.conversationSeed}
+            onDone={handleSessionDone}
+          />
+        );
     }
-
-    if (flowScreen === "feedback" && feedback) {
-      return (
-        <FeedbackScreen
-          userText={userText}
-          feedback={feedback}
-          languageLabel={langInfo.label}
-          scenarioTitle={scenarioInfo.title}
-          onBack={handleBackFromFeedback}
-          onContinue={handlePracticeAgain}
-          onViewProgress={handleViewProgress}
-        />
-      );
-    }
-
-    return null;
   };
 
   return (
@@ -161,7 +224,10 @@ export default function Home() {
       <PhoneShell showStatusBar={!isInFlow}>
         <div className="flex flex-1 flex-col overflow-hidden">
           {isInFlow ? (
-            <ScreenWrapper direction={transitionDir} className="flex flex-1 flex-col">
+            <ScreenWrapper
+              direction={transitionDir}
+              className="flex flex-1 flex-col"
+            >
               {renderFlowContent()}
             </ScreenWrapper>
           ) : (
@@ -171,11 +237,7 @@ export default function Home() {
                   {renderTabContent()}
                 </ScreenWrapper>
               </main>
-              <BottomNav
-                activeTab={activeTab}
-                onTabChange={navigateTab}
-                hidden={!showBottomNav}
-              />
+              <BottomNav activeTab={activeTab} onTabChange={navigateTab} />
             </>
           )}
         </div>

@@ -8,9 +8,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ZWIMA Speak — AI German & English Speaking Coach",
+  title: "ZWIMA Speak — Live confidently in Germany",
   description:
-    "Practice German and English daily speaking through realistic life and business scenarios.",
+    "An AI companion helping Chinese speakers live confidently in Germany. Real conversations, natural coaching.",
   applicationName: "ZWIMA Speak",
   manifest: "/manifest.json",
   appleWebApp: {

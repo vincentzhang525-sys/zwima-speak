@@ -2,13 +2,19 @@
 
 import { TABS } from "@/lib/navigation";
 import type { TabId } from "@/lib/navigation";
-import { TAB_ICONS } from "@/components/ui/Icons";
+import { IconHome, IconProgress, IconProfile } from "@/components/ui/Icons";
 
 interface BottomNavProps {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
   hidden?: boolean;
 }
+
+const TAB_ICON_MAP = {
+  home: IconHome,
+  progress: IconProgress,
+  profile: IconProfile,
+} as const;
 
 export function BottomNav({ activeTab, onTabChange, hidden }: BottomNavProps) {
   if (hidden) return null;
@@ -20,7 +26,7 @@ export function BottomNav({ activeTab, onTabChange, hidden }: BottomNavProps) {
     >
       <div className="grid grid-cols-3 px-2 pb-1 pt-2">
         {TABS.map((tab) => {
-          const Icon = TAB_ICONS[tab.id];
+          const Icon = TAB_ICON_MAP[tab.id];
           const isActive = activeTab === tab.id;
 
           return (
