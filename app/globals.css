@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-surface-muted text-slate-800;
+    overscroll-behavior: none;
+  }
+}
+
+@layer utilities {
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-800 to-primary-600 bg-clip-text text-transparent;
+  }
+}
+
+@layer components {
+  .screen-transition {
+    @apply animate-fade-in-up;
+  }
+
+  .screen-transition-forward {
+    @apply animate-slide-in-right;
+  }
+
+  .screen-transition-back {
+    @apply animate-slide-in-left;
+  }
+
+  .delay-1 {
+    animation-delay: 60ms;
+  }
+  .delay-2 {
+    animation-delay: 120ms;
+  }
+  .delay-3 {
+    animation-delay: 180ms;
+  }
+  .delay-4 {
+    animation-delay: 240ms;
+  }
+  .delay-5 {
+    animation-delay: 300ms;
+  }
+}
