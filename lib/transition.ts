@@ -47,13 +47,13 @@ export function getTransitionTagline(
 ): string {
   const pct = getTargetThinkingPercent(memory, transition);
   if (language === "german") {
-    if (pct < 12) return "Anna 陪你说，帮你慢慢进入德语";
-    if (pct < 45) return "你开始用德国人的方式想事情了";
-    return "越来越像在德国生活的人";
+    if (pct < 12) return "从今天开始，我会一直陪着你";
+    if (pct < 45) return "德语在生活里慢慢长出来";
+    return "越来越像在德国生活";
   }
-  if (pct < 12) return "Anna bridges you in — English follows naturally";
-  if (pct < 45) return "You're starting to think like a local";
-  return "Living abroad, not studying abroad";
+  if (pct < 12) return "From today on, I'm right beside you";
+  if (pct < 45) return "English grows naturally as you live it";
+  return "Living abroad — not studying abroad";
 }
 
 /** Legacy signature — prefers memory-aware overload when available */

@@ -16,22 +16,22 @@ export const WORLD_MILESTONE_DEFS: MilestoneDef[] = [
   {
     id: "airport",
     icon: "✈️",
-    title: L.de("Land in Germany", "Land Abroad"),
+    title: L.de("今天 · 落地", "We're here"),
     setting: L.de("Flughafen Berlin", "International Airport"),
     detail: L.bi(
-      "传送带走了一圈又一圈。你推着行李车走出到达大厅——德国的第一次呼吸，有点凉。",
-      "Das Band dreht sich. Du schiebst den Koffer durch die Ankunftshalle — erster Atemzug in Deutschland.",
-      "The carousel spins. You push your trolley through arrivals — first breath of your new country."
+      "传送带走了一圈又一圈。你推着行李车走出到达大厅——第一口德国的空气，有点凉。",
+      "Noch am Band. Du schiebst den Wagen.",
+      "The carousel spins. You push your trolley through arrivals."
     ),
     opening: L.bi(
-      "到了。护照还在口袋里热乎的——边检会问几句，自然地回答就好。",
-      "Du bist da. Pass noch warm — Grenze fragt kurz, antworte einfach.",
-      "You're here. Passport still warm — immigration will ask a few questions. Answer naturally."
+      "欢迎来到德国。飞机已经降落。我就在你旁边。今天什么都不用担心。我们慢慢来。",
+      "Willkommen. Ich bin da. Heute kein Stress. Langsam.",
+      "You're here. I'm beside you. Nothing to worry about today. We take it slow."
     ),
     closing: L.bi(
       "入境办完了。走，去你在德国的第一个住处。",
-      "Einreise geschafft. Los zur ersten Wohnung.",
-      "Immigration done. Let's head to your first place."
+      "Geschafft. Los zur Wohnung.",
+      "You're through. Let's head to your first place."
     ),
     beats: [
       {
@@ -39,29 +39,49 @@ export const WORLD_MILESTONE_DEFS: MilestoneDef[] = [
         npcLine: L.de("Guten Tag. Reisepass, bitte.", "Good morning. Passport, please."),
         phrase: L.de("Hier, bitte.", "Here you go."),
         keyPhrase: L.de("Hier, bitte", "Here you go"),
-        bridge: L.bi("官员伸出手。", "Der Beamte hält die Hand hin.", "The officer holds out his hand."),
-        speak: L.bi("递上护照——自然就好。", "Pass hinreichen — ganz normal.", "Hand over your passport — keep it natural."),
+        bridge: L.bi(
+          "看。\n你的行李。\nDas ist dein Koffer.",
+          "Schau.\nDein Koffer.\nDas ist dein Koffer.",
+          "Look.\nYour bag.\nDas ist dein Koffer."
+        ),
+        speak: L.bi(
+          "说错完全没关系。德国人听得懂。我就在旁边。我们一起。",
+          "Falsch ist okay. Ich bin da. Zusammen.",
+          "Getting it wrong is fine. They'll understand. I'm right here. Together."
+        ),
         continue: L.bi(
-          "他翻了翻：「Zweck des Aufenthalts?」",
-          "Er blättert: „Zweck des Aufenthalts?“",
-          "He flips through it: \"Purpose of your stay?\""
+          "他翻了翻，抬头问你为什么来德国。",
+          "Er blättert und schaut hoch.",
+          "He flips through it and looks up."
         ),
       },
       {
         id: "purpose",
-        phrase: L.de("Ich ziehe nach Deutschland.", "I'm moving to Germany."),
-        keyPhrase: L.de("ziehe nach Deutschland", "moving to Germany"),
-        bridge: L.bi("他在等你的回答。", "Er wartet auf deine Antwort.", "He's waiting for your answer."),
-        speak: L.bi("说你要搬来德国。", "Sag, dass du nach Deutschland ziehst.", "Say you're moving to Germany."),
+        phrase: L.de("Nach Deutschland.", "To Germany."),
+        keyPhrase: L.de("Nach Deutschland", "To Germany"),
+        bridge: L.bi("他在等你的回答。", "Er wartet.", "He's waiting."),
+        speak: L.bi(
+          "慢慢来。就说你要来德国生活。",
+          "Langsam. Nach Deutschland.",
+          "Take your time. Say you're moving here."
+        ),
         continue: L.bi("他点点头，盖了章。", "Er nickt und stempelt.", "He nods and stamps it."),
       },
       {
         id: "welcome",
-        npcLine: L.de("Willkommen in Deutschland!", "Welcome!"),
-        phrase: L.de("Danke schön!", "Thank you!"),
-        keyPhrase: L.de("Danke schön", "Thank you"),
-        bridge: L.bi("章盖好了。他微笑着说欢迎。", "Gestempelt. Er lächelt und heißt dich willkommen.", "Stamped. He smiles and welcomes you."),
-        speak: L.bi("道谢——温暖地说。", "Bedank dich — herzlich.", "Thank him — warmly."),
+        npcLine: L.de("Willkommen!", "Welcome!"),
+        phrase: L.de("Danke!", "Thank you!"),
+        keyPhrase: L.de("Danke", "Thank you"),
+        bridge: L.bi(
+          "章盖好了。\nWir gehen.\n他微笑着说：Willkommen.",
+          "Gestempelt.\nWir gehen.\nWillkommen.",
+          "Stamped.\nLet's go.\nHe smiles: Welcome."
+        ),
+        speak: L.bi(
+          "笑一下，道谢就好。",
+          "Lächeln. Danke.",
+          "Smile. Say thanks."
+        ),
       },
     ],
   },

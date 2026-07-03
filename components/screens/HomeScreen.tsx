@@ -43,6 +43,10 @@ export function HomeScreen({
     language === "german" ? PRODUCT_PROMISE.de : PRODUCT_PROMISE.en;
   const journeyTagline = getTransitionTagline(language, memory, transition);
   const sceneDetail = resolveLine(milestone.settingDetail, nativeSupport);
+  const isFreshStart =
+    progress.momentsCompleted === 0 &&
+    !progress.milestoneDone &&
+    progress.completedMilestoneIds.length === 0;
 
   return (
     <div className="flex flex-1 flex-col px-5 pb-4">
@@ -50,8 +54,21 @@ export function HomeScreen({
         <h1 className="text-[28px] font-bold tracking-tight text-slate-900">
           ZWIMA Speak
         </h1>
-        <p className="mt-1 text-[15px] text-slate-500">{tagline}</p>
-        <p className="mt-1 text-sm font-medium text-[#007AFF]">{journeyTagline}</p>
+        {language === "german" && isFreshStart ? (
+          <div className="mt-3 space-y-1.5">
+            <p className="text-[17px] leading-relaxed text-slate-800">欢迎来到德国。</p>
+            <p className="text-[15px] leading-relaxed text-slate-600">
+              从今天开始，我会一直陪着你。
+            </p>
+            <p className="text-[15px] leading-relaxed text-slate-600">不用着急学德语。</p>
+            <p className="text-[15px] font-medium text-slate-700">先开始生活。</p>
+          </div>
+        ) : (
+          <>
+            <p className="mt-1 text-[15px] text-slate-500">{tagline}</p>
+            <p className="mt-1 text-sm font-medium text-[#007AFF]">{journeyTagline}</p>
+          </>
+        )}
       </header>
 
       <div className="animate-fade-in-up delay-1 mt-6 overflow-hidden rounded-[28px] border border-surface-border bg-white shadow-elevated">
@@ -85,11 +102,11 @@ export function HomeScreen({
 
       <div className="animate-fade-in-up delay-3 mt-6 grid grid-cols-2 gap-3">
         <StatCard
-          label="Streak"
-          value={progress.streakDays > 0 ? `${progress.streakDays} days` : "—"}
+          label={language === "german" ? "一起的日子" : "Days together"}
+          value={progress.streakDays > 0 ? `${progress.streakDays} 天` : "今天"}
         />
         <StatCard
-          label={language === "german" ? "Denken auf Deutsch" : "Thinking shift"}
+          label={language === "german" ? "生活的感觉" : "Living in"}
           value={thinkingPct > 0 ? `${thinkingPct}%` : "—"}
         />
       </div>
@@ -98,7 +115,7 @@ export function HomeScreen({
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-              Coach language
+              {language === "german" ? "生活语言" : "Life language"}
             </p>
             <p className="mt-0.5 text-sm font-medium text-slate-600">
               {lang.flag} {lang.label}

@@ -4,8 +4,8 @@ import { bil } from "./bilingual";
 const GERMAN_SUPERMARKET: LifeMilestone = {
   id: "supermarket",
   icon: "🛒",
-  title: "First Supermarket",
-  journeyLabel: "Germany Life Journey",
+  title: "下午 · 超市",
+  journeyLabel: "在德国的日子",
   setting: "Rewe 超市",
   settingDetail: bil(
     "邻居指的方向没错——街角这家 Rewe 人不少。你推着空购物车，第一次在德国自己买菜。",
@@ -111,8 +111,8 @@ const GERMAN_SUPERMARKET: LifeMilestone = {
 const ENGLISH_SUPERMARKET: LifeMilestone = {
   id: "supermarket",
   icon: "🛒",
-  title: "First Supermarket",
-  journeyLabel: "English Life Journey",
+  title: "Groceries",
+  journeyLabel: "Life abroad",
   setting: "Local supermarket",
   settingDetail: bil(
     "就是邻居说的那家超市。你推着空购物车——第一次自己来买菜。",

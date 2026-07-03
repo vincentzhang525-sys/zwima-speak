@@ -57,7 +57,7 @@ export function SessionCompleteScreen({
         </div>
         <p className="text-sm font-medium text-[#007AFF]">Anna</p>
         <h1 className="mt-3 text-[28px] font-bold tracking-tight text-slate-900">
-          See you tomorrow.
+          {language === "german" ? "明天见。" : "See you tomorrow."}
         </h1>
         <p className="mx-auto mt-4 max-w-xs whitespace-pre-line text-[16px] leading-relaxed text-slate-600">
           {summary}
@@ -65,7 +65,7 @@ export function SessionCompleteScreen({
       </div>
       <div className="animate-fade-in-up delay-2 mt-10 w-full max-w-sm">
         <Button fullWidth onClick={onDone}>
-          Back home
+          {language === "german" ? "回家" : "Back home"}
         </Button>
       </div>
     </div>

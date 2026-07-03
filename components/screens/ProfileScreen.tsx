@@ -19,7 +19,11 @@ export function ProfileScreen({ language, onLanguageChange }: ProfileScreenProps
           Z
         </div>
         <h2 className="mt-4 text-xl font-bold text-slate-900">You</h2>
-        <p className="mt-1 text-sm text-slate-500">先会说，再像本地人一样想。</p>
+        <p className="mt-1 text-sm text-slate-500">
+          {language === "german"
+            ? "慢慢在德国生活，Anna 一直在旁边。"
+            : "Living abroad, with Anna beside you."}
+        </p>
       </div>
 
       <div className="animate-fade-in-up delay-1 mt-8 space-y-3">
@@ -51,7 +55,11 @@ export function ProfileScreen({ language, onLanguageChange }: ProfileScreenProps
         </div>
         <InfoCard
           title="Anna"
-          text="Anna remembers your conversations, where you hesitated, and what you're confident with. She lets you try first, reacts naturally, and fades Chinese support as you show you understand — never by level or lesson."
+          text={
+            language === "german"
+              ? "Anna 记得你说过的、犹豫过的、慢慢有把握的事。她让你先开口，自然地回应，中文会慢慢淡下去——不是按等级，是按你真实的生活。"
+              : "Anna remembers what you said, where you hesitated, and what feels natural now. She lets you try first — Chinese fades as you live it, not by level."
+          }
         />
         <InfoCard title="Version" text="ZWIMA Speak MVP · Mock data" />
       </div>

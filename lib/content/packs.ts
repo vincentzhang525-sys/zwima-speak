@@ -9,21 +9,21 @@ import { getLegacyMilestones } from "./legacy-milestones";
 import { ENGLISH_ROADMAP, GERMAN_ROADMAP } from "./journey-content";
 
 const GERMAN_UI = {
-  journeyLabel: "Germany Life Journey",
-  productPromise: "慢慢变成在德国生活的人",
-  enterMilestoneStart: "走进去",
-  enterMilestoneContinue: "继续",
-  journeyTagline: "慢慢变成在德国生活的人",
-  thinkingShiftLabel: "思维转换",
+  journeyLabel: "在德国的日子",
+  productPromise: "欢迎来到德国。",
+  enterMilestoneStart: "走吧",
+  enterMilestoneContinue: "继续走走",
+  journeyTagline: "从今天开始，我会一直陪着你。",
+  thinkingShiftLabel: "生活的感觉",
 } as const;
 
 const ENGLISH_UI = {
-  journeyLabel: "English Life Journey",
-  productPromise: "Becoming someone who lives abroad — not a language student",
-  enterMilestoneStart: "Step in",
-  enterMilestoneContinue: "Continue",
-  journeyTagline: "Becoming someone who lives abroad",
-  thinkingShiftLabel: "Thinking shift",
+  journeyLabel: "Life abroad",
+  productPromise: "You're here. Anna's with you.",
+  enterMilestoneStart: "Let's go",
+  enterMilestoneContinue: "Keep going",
+  journeyTagline: "From today on, I'm right beside you.",
+  thinkingShiftLabel: "Living the day",
 } as const;
 
 const GERMAN_PROMPTS = {
@@ -43,15 +43,15 @@ const ENGLISH_PROMPTS = {
 const GERMAN_ENGINE = {
   npcClarifyMisunderstood: "Wie bitte?",
   npcClarifyRepeat: "Noch einmal?",
-  annaKnowsAlready: "Du weißt schon — nochmal.",
-  annaTryAgain: "Kein Stress, nochmal — ich bin da.",
+  annaKnowsAlready: "你说过——自然地再来一次。",
+  annaTryAgain: "没关系，再说一次——我就在旁边。",
 } as const;
 
 const ENGLISH_ENGINE = {
   npcClarifyMisunderstood: "Sorry?",
   npcClarifyRepeat: "Once more?",
-  annaKnowsAlready: "You know this — again.",
-  annaTryAgain: "No rush, try again — I'm here.",
+  annaKnowsAlready: "You said this — say it again, naturally.",
+  annaTryAgain: "It's fine — try again. I'm right here.",
 } as const;
 
 function buildPack(language: Language): ContentPack {

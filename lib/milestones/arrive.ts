@@ -4,22 +4,22 @@ import { bil } from "./bilingual";
 const GERMAN_ARRIVE: LifeMilestone = {
   id: "arrive",
   icon: "🏠",
-  title: "Arrive in Germany",
-  journeyLabel: "Germany Life Journey",
+  title: "早上 · 楼下",
+  journeyLabel: "在德国的日子",
   setting: "你的新公寓楼下",
   settingDetail: bil(
     "行李箱还在玄关。你第一次走出大门，九月的风有点凉——邻居正从超市回来。",
-    "Der Koffer steht noch in der Diele. Du gehst zum ersten Mal raus — kühl, und die Nachbarin kommt vom Supermarkt."
+    "Die Tür. Frische Luft. Die Nachbarin kommt."
   ),
   coachName: "Anna",
   coachAvatar: "A",
   opening: bil(
-    "我就在你旁边。别紧张——就像你真的刚搬来，第一次下楼。听见什么、跟着说什么，我会慢慢少讲中文。",
-    "Ich bin direkt neben dir. Kein Stress — als wärst du wirklich gerade eingezogen. Hör zu, sag mit — ich wechsle nach und nach ins Deutsche."
+    "我就在你旁边。不用紧张——就像你真的刚搬来，第一次下楼。",
+    "Ich bin da. Kein Stress — erster Gang raus."
   ),
   closing: bil(
     "这一段结束了。你打过招呼、说过自己新来的、问到了超市、也道了谢——这就是在德国生活的开头。走，去她说的街角，买杯咖啡。",
-    "Das war dein erster echter Moment hier — Hallo, neu hier, Supermarkt, Danke. So fängt Leben in Deutschland an. Los, holen wir den Kaffee um die Ecke."
+    "Hallo, neu hier, Supermarkt, Danke — so fängt's an. Los, Kaffee um die Ecke."
   ),
   moments: [
     {
@@ -32,8 +32,8 @@ const GERMAN_ARRIVE: LifeMilestone = {
       phrase: "Hallo! Schönen Tag!",
       keyPhrase: "Hallo",
       speakPrompt: bil(
-        "她也跟你打招呼呢——自然地回她。",
-        "Sie grüßt dich — antworte einfach zurück."
+        "说错没关系。她也跟你打招呼呢——自然地回她。",
+        "Falsch ist okay. Sie grüßt — antworte zurück."
       ),
       continueScene: bil(
         "她停下脚步，把袋子换到另一只手，好像想多聊两句。",

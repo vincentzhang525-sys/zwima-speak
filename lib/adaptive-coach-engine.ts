@@ -379,14 +379,14 @@ export function getEmotionalReaction(
 
   if (ctx.supportLevel >= 3 && ctx.confidenceBand === "confident") {
     return language === "german"
-      ? bil("我们试试少一点中文。", "Lass uns mal mit weniger Chinesisch.")
-      : bil("我们试试少一点中文。", "Let's try without Chinese.");
+      ? bil("德语在慢慢长出来——很自然。", "Deutsch wächst — ganz natürlich.")
+      : bil("英语在慢慢长出来——很自然。", "English grows — naturally.");
   }
 
   if (ctx.repeatedMistake) {
     return language === "german"
-      ? bil("没关系，再来。我在这儿。", "Schon okay. Nochmal. Ich bin da.")
-      : bil("没关系，再来。", "It's fine. Again. I'm here.");
+      ? bil("说错完全没关系。德国人听得懂。我就在旁边。我们一起。", "Schon okay. Ich bin da. Zusammen.")
+      : bil("说错完全没关系。我就在旁边。我们一起。", "It's fine. I'm here. Together.");
   }
 
   if (!ctx.neededDemonstration && ctx.confidenceBand === "confident") {

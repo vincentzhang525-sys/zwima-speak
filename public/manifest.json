@@ -1,7 +1,7 @@
 {
   "name": "ZWIMA Speak",
   "short_name": "Speak",
-  "description": "AI German & English Speaking Coach for daily practice",
+  "description": "Anna — your companion for living in Germany",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

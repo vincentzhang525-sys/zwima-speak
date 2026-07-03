@@ -22,11 +22,11 @@ export function ProgressScreen({ language, progress }: ProgressScreenProps) {
   return (
     <div className="flex-1 px-5 pb-6">
       <PageHeader
-        title="Your journey"
+        title={language === "german" ? "你的日子" : "Your days"}
         subtitle={
           language === "german"
-            ? "慢慢变成在德国生活的人"
-            : "Becoming someone who lives abroad"
+            ? "从今天开始，我会一直陪着你"
+            : "From today on, I'm right beside you"
         }
       />
 
@@ -35,16 +35,20 @@ export function ProgressScreen({ language, progress }: ProgressScreenProps) {
         <h2 className="mt-1 text-2xl font-bold">
           {thinkingPct > 0
             ? language === "german"
-              ? `Denken auf Deutsch · ${thinkingPct}%`
-              : `Thinking shift · ${thinkingPct}%`
+              ? `在德国生活 · ${thinkingPct}%`
+              : `Living abroad · ${thinkingPct}%`
             : language === "german"
-              ? "Anna 陪你过渡"
-              : "Anna bridges you in"}
+              ? "Anna 就在旁边"
+              : "Anna's right here"}
         </h2>
         <p className="mt-3 text-sm text-blue-100">
           {progress.milestoneDone
-            ? `Just finished: ${progress.milestoneTitle}`
-            : `Now: ${progress.milestoneTitle}`}
+            ? language === "german"
+              ? `刚走完：${progress.milestoneTitle}`
+              : `Just finished: ${progress.milestoneTitle}`
+            : language === "german"
+              ? `现在：${progress.milestoneTitle}`
+              : `Now: ${progress.milestoneTitle}`}
         </p>
         {!progress.milestoneDone && progress.momentsCompleted > 0 && (
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/20">
@@ -60,7 +64,7 @@ export function ProgressScreen({ language, progress }: ProgressScreenProps) {
 
       <div className="animate-fade-in-up delay-1 mt-6 space-y-2">
         <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-          Roadmap
+          {language === "german" ? "接下来的日子" : "What's ahead"}
         </p>
         {roadmap.map((item) => {
           const isComplete = progress.completedMilestoneIds.includes(item.id);

@@ -57,15 +57,15 @@ function buildWelcomeLine(
   if (language === "german") {
     if (milestoneId === "airport") {
       return bil(
-        "到了。护照还在口袋里——边检会问几句，自然地回答就好。",
-        "Du bist da. Pass noch warm — Grenze fragt kurz, antworte einfach."
+        "欢迎来到德国。\n飞机已经降落了。\n我就在你旁边。\n今天什么都不用担心。\n我们慢慢来。",
+        "Willkommen.\nIch bin da.\nHeute kein Stress.\nLangsam."
       );
     }
     if (milestoneId === "arrive") {
       if (memory.daysTogether <= 1) {
         return bil(
-          "早上好。今天是你搬来德国的第一天——我陪你下楼透透气，跟真实的人打个招呼。",
-          "Guten Morgen. Dein erster Tag hier — ich geh mit dir runter, echte Menschen, echtes Hallo."
+          "早上好。\n今天是你搬来德国的第一天。\n我陪你下楼透透气。\n跟真实的人打个招呼就好。",
+          "Guten Morgen.\nErster Tag.\nIch bin da.\nEchtes Hallo."
         );
       }
       return bil(
@@ -215,10 +215,21 @@ function buildTryFirst(
   const confident = memory.confidenceScore >= 65;
   const soft = confident
     ? bil("你先试试——我在。", "Versuch du's — ich warte.")
-    : bil("你先试试。不用完美，我在旁边。", "Probier's. Muss nicht perfekt sein — ich bin da.");
+    : bil(
+        "你先试试。说错完全没关系。我就在旁边。我们一起。",
+        "Probier's. Falsch ist okay. Ich bin da. Zusammen."
+      );
 
   if (language === "german") {
     const prompts: Record<string, Record<string, BilingualLine>> = {
+      airport: {
+        passport: bil(
+          "递上护照就好。说错没关系。",
+          "Pass — ganz normal."
+        ),
+        purpose: bil("他在等。慢慢来。", "Er wartet. Langsam."),
+        welcome: bil("笑一下，道谢就好。", "Lächeln. Danke."),
+      },
       arrive: {
         hello: bil("她看过来了——你先开口。", "Sie schaut rüber — du zuerst."),
         introduce: bil("她在等——你先说说。", "Sie wartet — du zuerst."),
@@ -244,6 +255,11 @@ function buildTryFirst(
   }
 
   const prompts: Record<string, Record<string, BilingualLine>> = {
+    airport: {
+      passport: bil("递上护照就好。说错没关系。", "Pass — keep it natural."),
+      purpose: bil("他在等。慢慢来。", "He's waiting. Take your time."),
+      welcome: bil("笑一下，道谢就好。", "Smile. Thanks."),
+    },
     arrive: {
       hello: bil("她看着你呢——你先开口。", "She's looking — you first."),
       introduce: bil("她在等——你先说。", "She's waiting — you first."),

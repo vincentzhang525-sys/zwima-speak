@@ -123,6 +123,14 @@ export function CoachSessionScreen({
         })
       : null;
 
+    const cinematicOpen =
+      isFirstBeat &&
+      !isResuming &&
+      annaMemory.daysTogether <= 1 &&
+      milestoneId === "airport";
+    const sceneDelay = cinematicOpen ? 4200 : isFirstBeat ? 1800 : 400;
+    const bridgeGap = cinematicOpen ? 1600 : 700;
+
     const t1 = setTimeout(() => {
       if (welcome) addCoach(welcome);
     }, 300);
@@ -142,8 +150,8 @@ export function CoachSessionScreen({
           )
         );
         setPhase("speak");
-      }, 700);
-    }, isFirstBeat ? 1600 : 400);
+      }, bridgeGap);
+    }, sceneDelay);
 
     return () => {
       clearTimeout(t1);

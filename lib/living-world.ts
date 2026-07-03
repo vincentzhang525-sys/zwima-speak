@@ -464,29 +464,29 @@ export function getTaskOpeningLine(
   if (language === "german") {
     if (livingDay <= 1 && milestoneId === "airport") {
       return {
-        native: `第 ${livingDay} 天。你刚落地德国——从机场开始。`,
-        target: `Tag ${livingDay}. Gerade gelandet — Start am Flughafen.`,
+        native: `第 ${livingDay} 天。你刚落地德国。`,
+        target: `Tag ${livingDay}. Gerade gelandet.`,
       };
     }
     if (livingDay <= 1 && milestoneId === "arrive") {
       return {
-        native: `今天是你在德国的第一天。任务：${obj.taskShort.german}。`,
-        target: `Erster Tag hier. Aufgabe: ${obj.task.german}.`,
+        native: `今天是你在德国的第一天。早上，下楼走走。`,
+        target: `Erster Tag. Morgen — runter gehen.`,
       };
     }
     return {
-      native: `今天的任务：${obj.taskShort.german}。`,
+      native: `今天：${obj.taskShort.german}。`,
       target: `Heute: ${obj.task.german}.`,
     };
   }
   if (livingDay <= 1 && milestoneId === "arrive") {
     return {
-      native: `搬来第一天。任务：${obj.taskShort.english}。`,
-      target: `First day here. Task: ${obj.task.english}.`,
+      native: `搬来第一天。早上，下楼走走。`,
+      target: `First day. Morning — step outside.`,
     };
   }
   return {
-    native: `今天的任务：${obj.taskShort.english}。`,
+    native: `今天：${obj.taskShort.english}。`,
     target: `Today: ${obj.task.english}.`,
   };
 }
@@ -550,8 +550,8 @@ export function getContinuityWelcome(
     if (language === "german") {
       return {
         native: bridge
-          ? `${bridge.native}\n邻居说的那家店——任务：买咖啡。`
-          : `邻居说的那家店——任务：买咖啡。`,
+          ? `${bridge.native}\n邻居说的那家店——一起去喝杯咖啡。`
+          : `邻居说的那家店——一起去喝杯咖啡。`,
         target: bridge
           ? `${bridge.target}\nCafé, wie die Nachbarin sagte.`
           : "Café, wie die Nachbarin sagte.",
@@ -562,8 +562,8 @@ export function getContinuityWelcome(
   if (milestoneId === "supermarket" && barista && barista.interactionCount > 0) {
     if (language === "german") {
       return {
-        native: `${bridge?.native ?? "咖啡喝完了。"}\n任务：买菜。`,
-        target: `${bridge?.target ?? "Kaffee ist durch."}\nAufgabe: einkaufen.`,
+        native: `${bridge?.native ?? "咖啡喝完了。"}\n一起去超市补货。`,
+        target: `${bridge?.target ?? "Kaffee ist durch."}\nSupermarkt.`,
       };
     }
   }

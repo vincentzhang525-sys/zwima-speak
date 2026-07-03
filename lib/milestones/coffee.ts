@@ -4,8 +4,8 @@ import { bil } from "./bilingual";
 const GERMAN_COFFEE: LifeMilestone = {
   id: "coffee",
   icon: "☕",
-  title: "First Coffee Shop",
-  journeyLabel: "Germany Life Journey",
+  title: "一起去喝咖啡",
+  journeyLabel: "在德国的日子",
   setting: "柏林街角咖啡店",
   settingDetail: bil(
     "街角排着队，咖啡香从玻璃门里飘出来。收银员抬起头——你在德国的第一杯咖啡，就从这里开始。",
