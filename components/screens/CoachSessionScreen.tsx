@@ -64,6 +64,8 @@ import {
 
 } from "@/lib/speaking-loop";
 
+import { getListenSpeechParts, speakTextSequence, stopSpeaking } from "@/lib/speak-text";
+
 
 
 type BeatPhase = "scene" | "hear" | "invite" | "speak" | "feedback";
@@ -218,6 +220,8 @@ export function CoachSessionScreen({
 
   const [hearKey, setHearKey] = useState(0);
 
+  const [audioBlockedMessage, setAudioBlockedMessage] = useState<string | null>(null);
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const autoContinueRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -240,7 +244,13 @@ export function CoachSessionScreen({
 
     const stopAmbience = startMilestoneAmbience(milestoneId);
 
-    return () => stopAmbience();
+    return () => {
+
+      stopAmbience();
+
+      stopSpeaking();
+
+    };
 
   }, [milestoneId]);
 
@@ -259,6 +269,10 @@ export function CoachSessionScreen({
     setHintLevel(0);
 
     setHearKey(0);
+
+    setAudioBlockedMessage(null);
+
+    stopSpeaking();
 
     if (autoContinueRef.current) clearTimeout(autoContinueRef.current);
 
@@ -354,7 +368,15 @@ export function CoachSessionScreen({
 
     setHearKey((k) => k + 1);
 
+    setAudioBlockedMessage(null);
+
     addCoach(getAnnaSpeaksLine(language, moment, milestoneId));
+
+    speakTextSequence(getListenSpeechParts(language, moment), () => {
+
+      setAudioBlockedMessage("点一下再听一次");
+
+    });
 
   };
 
@@ -709,6 +731,12 @@ export function CoachSessionScreen({
               {language === "german" ? "跟我试试" : "Try it with me"}
 
             </Button>
+
+            {audioBlockedMessage && (
+
+              <p className="text-center text-xs text-amber-700">{audioBlockedMessage}</p>
+
+            )}
 
           </div>
 
