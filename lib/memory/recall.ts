@@ -42,6 +42,12 @@ export function pickMemoryRecallLine(
   const life = recallLifeEvent(language, ltm, profile, memory, ctx);
   if (life) candidates.push(life);
 
+  const npcOrder = recallNpcOrder(language, memory, ctx.milestoneId);
+  if (npcOrder) candidates.push(npcOrder);
+
+  const airportEase = recallAirportEase(language, memory, ltm, ctx.milestoneId);
+  if (airportEase) candidates.push(airportEase);
+
   const session = recallPreviousSession(language, ltm, ctx);
   if (session) candidates.push(session);
 
@@ -191,6 +197,39 @@ function recallLifeEvent(
   }
 
   return null;
+}
+
+function recallNpcOrder(
+  language: Language,
+  memory: AnnaMemory,
+  milestoneId: string
+): BilingualLine | null {
+  if (milestoneId !== "coffee") return null;
+  const visit = memory.npcMemories.coffee;
+  if (!visit?.lastProductLabel || visit.visitCount < 1) return null;
+  const drink = visit.lastProductLabel;
+  return language === "german"
+    ? bil(`上次你点的是${drink}。`, `Letztes Mal war's ${drink}.`)
+    : bil(`上次你点的是${drink}。`, `Last time you ordered a ${drink}.`);
+}
+
+function recallAirportEase(
+  language: Language,
+  memory: AnnaMemory,
+  ltm: LongTermMemory,
+  milestoneId: string
+): BilingualLine | null {
+  if (milestoneId === "airport") return null;
+  const wasNervous = ltm.emotionalHistory.some(
+    (e) => e.tone === "nervous" || e.tone === "hesitant"
+  );
+  if (!wasNervous || !memory.completedExperiences.includes("airport")) return null;
+  if (memory.lastConfidenceBand !== "confident" && memory.lastConfidenceBand !== "very_confident") {
+    return null;
+  }
+  return language === "german"
+    ? bil("机场那天你还紧张——今天轻松多了。", "Am Flughafen warst du nervös — heute viel lockerer.")
+    : bil("机场那天你还紧张——今天轻松多了。", "You were nervous at the airport — today feels much easier.");
 }
 
 function recallPreviousSession(

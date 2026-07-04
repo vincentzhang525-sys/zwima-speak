@@ -191,9 +191,13 @@ export function buildLearnerObservation(
   const structureFamily = getStructureFamily(momentId, keyPhrase);
   const supportLevel = getMemoryAdjustedSupportLevel(memory, transition);
   const influence = applyMemoryInfluence(memory, transition);
-  const baseRatio = SUPPORT_NATIVE_RATIO[supportLevel];
+  const patternConfident = memory.confidentPatterns.includes(patternKey);
+  const boostedLevel = patternConfident
+    ? (Math.min(5, supportLevel + 1) as SupportLevel)
+    : supportLevel;
+  const baseRatio = SUPPORT_NATIVE_RATIO[boostedLevel];
   const nativeSupportRatio = clamp(
-    baseRatio + influence.nativeRatioAdjust,
+    baseRatio + influence.nativeRatioAdjust - (patternConfident ? 0.08 : 0),
     0.05,
     0.98
   );
@@ -203,7 +207,7 @@ export function buildLearnerObservation(
     transition,
     patternKey,
     structureFamily,
-    supportLevel,
+    supportLevel: boostedLevel,
     nativeSupportRatio,
     thinkingShiftPercent: getThinkingShiftPercent(memory, transition),
     confidenceBand: memory.lastConfidenceBand,

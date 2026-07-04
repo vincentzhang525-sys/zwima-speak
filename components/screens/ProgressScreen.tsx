@@ -2,6 +2,7 @@
 
 import { PageHeader } from "@/components/layout/Headers";
 import { getJourneyLabel, getJourneyRoadmap } from "@/lib/journey";
+import { getCompletedAchievements } from "@/lib/life-achievements";
 import { isMilestonePlayable } from "@/lib/milestones";
 import { getAnnaMemoryFromProgress, getTransitionProfile } from "@/lib/progress";
 import { getTargetThinkingPercent } from "@/lib/transition";
@@ -18,6 +19,7 @@ export function ProgressScreen({ language, progress }: ProgressScreenProps) {
   const transition = getTransitionProfile(progress, language);
   const memory = getAnnaMemoryFromProgress(progress, language);
   const thinkingPct = getTargetThinkingPercent(memory, transition);
+  const achievements = getCompletedAchievements(progress.completedMilestoneIds, language);
 
   return (
     <div className="flex-1 px-5 pb-6">
@@ -62,6 +64,23 @@ export function ProgressScreen({ language, progress }: ProgressScreenProps) {
         )}
       </div>
 
+      {achievements.length > 0 && (
+        <div className="animate-fade-in-up delay-1 mt-6 space-y-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
+            {language === "german" ? "你已经做到的事" : "What you've already done"}
+          </p>
+          {achievements.map((a) => (
+            <div
+              key={a.label}
+              className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 shadow-card"
+            >
+              <span className="text-xl">{a.icon}</span>
+              <span className="flex-1 text-[15px] font-medium text-slate-800">✓ {a.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="animate-fade-in-up delay-1 mt-6 space-y-2">
         <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
           {language === "german" ? "接下来的日子" : "What's ahead"}
@@ -91,15 +110,19 @@ export function ProgressScreen({ language, progress }: ProgressScreenProps) {
 
       <div className="animate-fade-in-up delay-2 mt-6 space-y-3">
         <StatRow
-          label="Right now"
-          value={progress.studyMinutes > 0 ? `${progress.studyMinutes} min` : "—"}
+          label={language === "german" ? "今天" : "Today"}
+          value={progress.studyMinutes > 0 ? `${progress.studyMinutes} 分钟` : "—"}
         />
         <StatRow
-          label="Streak"
+          label={language === "german" ? "一起的日子" : "Days together"}
           value={
             progress.streakDays > 0
-              ? `${progress.streakDays} day${progress.streakDays > 1 ? "s" : ""}`
-              : "—"
+              ? language === "german"
+                ? `${progress.streakDays} 天`
+                : `${progress.streakDays} day${progress.streakDays > 1 ? "s" : ""}`
+              : language === "german"
+                ? "今天"
+                : "Today"
           }
         />
       </div>
@@ -107,7 +130,9 @@ export function ProgressScreen({ language, progress }: ProgressScreenProps) {
       {!progress.milestoneDone && progress.momentsCompleted === 0 && (
         <div className="animate-fade-in-up delay-3 mt-6 rounded-2xl border border-dashed border-surface-border px-5 py-8 text-center">
           <p className="text-[15px] text-slate-500">
-            Anna is waiting on the Home screen.
+            {language === "german"
+              ? "Anna 在首页等你——走吧。"
+              : "Anna's waiting on the Home screen — let's go."}
           </p>
         </div>
       )}

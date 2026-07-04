@@ -26,12 +26,20 @@ const COFFEE_PERSONALITIES: Record<Language, Personality[]> = {
     { id: "rushed", pace: "fast" },
     { id: "formal", pace: "slow" },
     { id: "chatty", pace: "normal" },
+    { id: "tired", pace: "slow" },
+    { id: "energetic", pace: "fast" },
+    { id: "quiet", pace: "slow" },
+    { id: "friendly", pace: "normal" },
   ],
   english: [
     { id: "warm", pace: "normal" },
     { id: "rushed", pace: "fast" },
     { id: "formal", pace: "slow" },
     { id: "chatty", pace: "normal" },
+    { id: "tired", pace: "slow" },
+    { id: "energetic", pace: "fast" },
+    { id: "quiet", pace: "slow" },
+    { id: "friendly", pace: "normal" },
   ],
 };
 
@@ -78,6 +86,8 @@ function materializeCoffee(
   const ending = pickOne(seed, "ending", COFFEE_ENDINGS[language]);
   const settingFlavor = pickOne(seed, "setting", COFFEE_SETTING_FLAVOR[language]);
   const shopName = pickOne(seed, "shop", COFFEE_SHOP_NAMES[language]);
+  const baristaAge = pickOne(seed, "barista-age", BARISTA_AGE_LABEL[language]);
+  const baristaName = pickOne(seed, "barista-name", BARISTA_NAMES[language]);
 
   const sharedMeta: Omit<ConversationVariantMeta, "personalityId" | "npcPace"> = {
     productId: drink.id,
@@ -104,12 +114,12 @@ function materializeCoffee(
 
   const settingDetail = language === "german"
     ? bil(
-        `${settingFlavor.native} ${shopName} — ${personalityLabelDe(personality.id)}。`,
-        `${settingFlavor.target} ${shopName} — ${personalityLabelDe(personality.id)}.`
+        `${settingFlavor.native} ${shopName}——${baristaAge}的${baristaName}在吧台后面，${personalityLabelDe(personality.id)}。`,
+        `${settingFlavor.target} ${shopName} — ${baristaName} hinter der Theke, ${personalityLabelDe(personality.id)}.`
       )
     : bil(
-        `${settingFlavor.native} ${shopName}。`,
-        `${settingFlavor.target} ${shopName}.`
+        `${settingFlavor.native} ${shopName}——${baristaAge} ${baristaName} behind the counter, ${personalityLabelDe(personality.id)}.`,
+        `${settingFlavor.target} ${shopName} — ${baristaName}, ${personalityLabelDe(personality.id)}.`
       );
 
   const closing = language === "german"
@@ -442,9 +452,22 @@ function personalityLabelDe(id: string): string {
     busy: "收银台有点赶",
     quiet: "店里比较安静",
     cheerful: "气氛挺轻松",
+    tired: "看起来有点累但很耐心",
+    energetic: "手脚很快",
+    friendly: "笑得很暖",
   };
   return labels[id] ?? "";
 }
+
+const BARISTA_NAMES: Record<Language, string[]> = {
+  german: ["Lena", "Marco", "Aylin", "Stefan", "Julia", "Omar"],
+  english: ["Maya", "Chris", "Priya", "Tom", "Sara", "Alex"],
+};
+
+const BARISTA_AGE_LABEL: Record<Language, string[]> = {
+  german: ["年轻", "中年", "年长"],
+  english: ["young", "middle-aged", "older"],
+};
 
 function customizationLeadIn(
   language: Language,
@@ -504,8 +527,22 @@ function payBridge(
 }
 
 const COFFEE_SHOP_NAMES: Record<Language, string[]> = {
-  german: ["Café Sonnenschein", "Bäckerei Krüger", "Espresso Bar Mitte", "Café am Park"],
-  english: ["Corner Grind", "The Daily Cup", "Park Street Café", "Bean & Co"],
+  german: [
+    "Café Sonnenschein",
+    "Bäckerei Krüger",
+    "Espresso Bar Mitte",
+    "Café am Park",
+    "Rösterei Nord",
+    "Kaffee Zeit",
+  ],
+  english: [
+    "Corner Grind",
+    "The Daily Cup",
+    "Park Street Café",
+    "Bean & Co",
+    "North Roasters",
+    "Morning Brew",
+  ],
 };
 
 const COFFEE_SETTING_FLAVOR: Record<Language, { native: string; target: string }[]> = {
